@@ -6,7 +6,7 @@
 /*   By: achabrer <achabrer@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 16:02:06 by achabrer          #+#    #+#             */
-/*   Updated: 2023/11/06 10:54:15 by achabrer         ###   ########.fr       */
+/*   Updated: 2023/11/06 11:20:24 by achabrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	run_child(t_pipex *pipex, char **argv)
 	dup2(pipex->fd_in, STDIN_FILENO);
 	dup2(pipex->fds[1], STDOUT_FILENO);
 	if (execve(pipex->cmd, pipex->cmd_arg, pipex->path) == -1)
-		exit_error(strerror(errno), pipex);
+		exit_error("first child execve", pipex);
 }
 
 void	run_second_child(t_pipex *pipex, char **argv)
@@ -32,7 +32,7 @@ void	run_second_child(t_pipex *pipex, char **argv)
 	dup2(pipex->fds[0], STDIN_FILENO);
 	dup2(pipex->fd_out, STDOUT_FILENO);
 	if (execve(pipex->cmd, pipex->cmd_arg, pipex->path) == -1)
-		exit_error(strerror(errno), pipex);
+		exit_error("second child execve", pipex);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -48,12 +48,12 @@ int	main(int argc, char **argv, char **envp)
 	pipe(pipex->fds);
 	pipex->pid[CHILD1] = fork();
 	if (pipex->pid[CHILD1] == -1)
-		exit_error(strerror(errno), pipex);
+		exit_error("first child pid", pipex);
 	if (!pipex->pid[CHILD1])
 		run_child(pipex, argv);
 	pipex->pid[CHILD2] = fork();
 	if (pipex->pid[CHILD2] == -1)
-		exit_error(strerror(errno), pipex);
+		exit_error("second child pid", pipex);
 	if (!pipex->pid[CHILD2])
 		run_second_child(pipex, argv);
 	wait(NULL);

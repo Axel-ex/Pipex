@@ -6,7 +6,7 @@
 /*   By: achabrer <achabrer@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 16:04:44 by achabrer          #+#    #+#             */
-/*   Updated: 2023/11/06 10:25:09 by achabrer         ###   ########.fr       */
+/*   Updated: 2023/11/06 11:18:44 by achabrer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_pipex	*init_pipex(char **argv, char **envp)
 	pipex->fd_in = open(pipex->infile, O_RDONLY);
 	pipex->fd_out = open(pipex->outfile, O_WRONLY | O_CREAT, 0777);
 	if (pipex->fd_in == -1 || pipex->fd_out == -1)
-		exit_error(strerror(errno), pipex);
+		exit_error("input/output files", pipex);
 	return (pipex);
 }
 
